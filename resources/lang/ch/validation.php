@@ -99,9 +99,18 @@ return [
     |
     */
 
+//    'custom' => [
+//        'attribute-name' => [
+//            'rule-name' => 'custom-message',
+//        ],
+//    ],
+
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'unique' => '邮箱已经被占用',
+        ],
+        'password' => [
+            'confirmed' => '2次密码不一致',
         ],
     ],
 
