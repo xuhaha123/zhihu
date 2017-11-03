@@ -19,3 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/email/yanzheng/{token}',['as'=>'email.yanzheng','uses'=>'EmailController@yanzheng']);
+Route::resource('questions','QuestionController',['names'=>[
+    'create'=>'question.create',
+    'show'=>'question.show',
+]]);
