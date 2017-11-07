@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreResquest;
 use App\Question;
+use App\Repositories\QuestionRepository;
+use App\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,6 +16,14 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    protected $questionRepository;
+
+    public function __construct(QuestionRepository $questionRepository)
+    {
+//        $this->middleware('auth')->except(['index','show']);原来有的
+        $this->questionRepository =$questionRepository;
+    }
     public function index()
     {
         //
@@ -52,12 +62,18 @@ class QuestionController extends Controller
 //        ];
 //        $this->validate($request,$rules,$message);
         //通过依赖注入
+//        dd($request->get('topics'));
+//        $topics =$this->normalizeTopic($request->get('topics'));
+        $topics =$this->questionRepository->normalizeTopic($request->get('topics'));
+
         $data =[
           'title'=>$request->get('title'),
           'body'=>$request->get('body'),
             'user_id'=>Auth::id()
         ];
-       $question = Question::create($data);
+//       $question =Question::create($data);
+        $question =$this->questionRepository->create($data);
+        $question->topics()->attach($topics);//多对多
         return redirect()->route('question.show',[$question->id]);
     }
 
@@ -70,7 +86,10 @@ class QuestionController extends Controller
     public function show($id)
     {
         //
-        $question =Question::find($id);
+//        $question =Question::find($id);
+//        $question =Question::where('id',$id)->with('topics')->first();
+        $question =$this->questionRepository->byIdWithTopics($id);
+
 //        return $question;
         return view('questions.show',compact('question'));
     }
@@ -108,4 +127,5 @@ class QuestionController extends Controller
     {
         //
     }
+
 }

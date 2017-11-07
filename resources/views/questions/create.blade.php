@@ -23,7 +23,7 @@
                                     @endif
                             </div>
                             <div class="form-group">
-                                <select class="js-example-basic-multiple form-control" name="states[]" multiple="multiple">
+                                <select name="topics[]" class="js-example-basic-multiple form-control" name="states[]" multiple="multiple">
                                     <option value="AL">Alabama</option>
                                     ...
                                     <option value="WY">Wyoming</option>
