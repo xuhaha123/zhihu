@@ -24,17 +24,22 @@ class QuestionRepository
 
     }
 
-    private function normalizeTopic(array $topics)
+    public function normalizeTopic(array $topics)
     {
         return  collect($topics)->map(function($topic){
             if(is_numeric($topic))
             {
-                Topic::find($topic)->increment('questions_count');
+                Topic::find($topic);
                 return (int) $topic;
             }
             $newTopic =Topic::create(['name'=>$topic,'questions_count'=>1]);
             return $newTopic->id;
         })->toArray();
+
+    }
+    public function byId($id)
+    {
+        return Question::find($id);
 
     }
 

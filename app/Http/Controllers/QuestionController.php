@@ -62,7 +62,7 @@ class QuestionController extends Controller
 //        ];
 //        $this->validate($request,$rules,$message);
         //通过依赖注入
-//        dd($request->get('topics'));
+//        dd($request->get('topics'));把数组转换为id
 //        $topics =$this->normalizeTopic($request->get('topics'));
         $topics =$this->questionRepository->normalizeTopic($request->get('topics'));
 
@@ -103,6 +103,13 @@ class QuestionController extends Controller
     public function edit($id)
     {
         //
+        $question =$this->questionRepository->byId($id);
+        //用户是不是作者
+        if(Auth::user()->owns($question))
+        {
+            return view('questions.edit',compact('question'));
+        }
+        return back();
     }
 
     /**
@@ -112,9 +119,22 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+//    public function update(Request $request, $id)
+//    {
+//    }
+    public function update(StoreResquest $request, $id)
     {
-        //
+        $question =$this->questionRepository->byId($id);
+        $topics =$this->questionRepository->normalizeTopic($request->get('topics'));
+        $question->update([
+            'title'=>$request->get('title'),
+            'body'=>$request->get('body'),
+        ]);
+        $question->topics()->sync($topics);
+        return redirect()->route('question.show',[$question->id]);
+
+
+
     }
 
     /**
