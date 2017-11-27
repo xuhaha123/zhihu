@@ -8,7 +8,6 @@
 
 namespace App\Repositories;
 
-
 use App\Question;
 use App\Topic;
 
@@ -41,6 +40,10 @@ class QuestionRepository
     {
         return Question::find($id);
 
+    }
+    public function getQuestionsFeed()
+    {
+        return Question::published()->latest('updated_at')->with('user')->get();
     }
 
 }
