@@ -48,7 +48,7 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreResquest $request)
+    public function store(StoreResquest $request)// 依赖注入
     {
         //发表问题验证字段
 //        $rules =[
@@ -78,6 +78,7 @@ class QuestionController extends Controller
         return redirect()->route('question.show',[$question->id]);
     }
 
+
     /**
      * Display the specified resource.
      *
@@ -88,10 +89,13 @@ class QuestionController extends Controller
     {
         //
 //        $question =Question::find($id);
-//        $question =Question::where('id',$id)->with('topics')->first();
+        // 使用 with 方法指定想要预载入的关联对象 预载入可以大大提高程序的性能
+        // 这里的 topics 是App\Models\Question 中的 topics 的方法
+        $question = Question::where('id',$id)->with('topics')->first();
         $question =$this->questionRepository->byIdWithTopics($id);
 
 //        return $question;
+        // compact 创建一个包含变量名和它们的值的数组
         return view('questions.show',compact('question'));
     }
 
@@ -151,7 +155,7 @@ class QuestionController extends Controller
         if(Auth::user()->owns($question))
         {
             $question->delete();
-            return redirect('/');
+            return redirect()->route('question.index');
         }
         abort(403,'Forbidden');
     }
