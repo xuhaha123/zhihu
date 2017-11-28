@@ -25,3 +25,5 @@ Route::resource('questions','QuestionController',['names'=>[
     'index'=>'question.index',
     'show'=>'question.show',
 ]]);
+
+Route::post('questions/{question}/answer','AnswerController@store');

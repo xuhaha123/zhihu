@@ -34,6 +34,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function answer()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
   public function owns(Model $model)
   {
       return $this->id ==$model->user_id;
